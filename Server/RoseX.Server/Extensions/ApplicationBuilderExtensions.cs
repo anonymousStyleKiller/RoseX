@@ -10,4 +10,14 @@ internal static class ApplicationBuilderExtensions
             app.UseDeveloperExceptionPage();
         }
     }
+
+    internal static void ConfigureSwagger(this IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI(opt =>
+        {
+            opt.SwaggerEndpoint("swagger/v1/swagger.json", typeof(Program).Assembly.GetName().Name);
+            opt.DisplayRequestDuration();
+        });
+    }
 }
