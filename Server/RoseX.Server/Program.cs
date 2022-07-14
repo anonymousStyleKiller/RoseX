@@ -1,25 +1,23 @@
-var builder = WebApplication.CreateBuilder(args);
+using RoseX.Server;
+using RoseX.Server.Extensions;
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+public class Program
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public static async Task Main(string[] args)
+    {
+      
+        var host = CreateHostBuilder(args).Build();
+        await host.StartAsync();
+    }
+
+    private static IHostBuilder CreateHostBuilder(string[] args)
+    {
+        return Host.CreateDefaultBuilder(args)
+            .UseSerilog()
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStaticWebAssets();
+                webBuilder.UseStartup<Startup>();
+            });
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
