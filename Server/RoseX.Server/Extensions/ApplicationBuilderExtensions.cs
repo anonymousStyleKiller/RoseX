@@ -1,4 +1,6 @@
-﻿namespace RoseX.Server.Extensions;
+﻿using Microsoft.AspNetCore.HttpOverrides;
+
+namespace RoseX.Server.Extensions;
 
 internal static class ApplicationBuilderExtensions
 {
@@ -20,4 +22,28 @@ internal static class ApplicationBuilderExtensions
             opt.DisplayRequestDuration();
         });
     }
+
+    internal static void UseForwarding(this IApplicationBuilder app, IConfiguration configuration)
+    {
+        app.UseCors();
+        app.UseForwardedHeaders(new ForwardedHeadersOptions
+        {
+            ForwardedHeaders = ForwardedHeaders.XForwardedProto
+        });
+    }
+
+
+    internal static void UseEndpoints(this IApplicationBuilder app)
+    {
+        app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+                endpoints.MapControllers();
+                endpoints.MapFallbackToFile("index.html");
+            }
+            );
+    }
+    
+    
+    
 }
